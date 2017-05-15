@@ -159,29 +159,29 @@ Parser::ParserResult Parser::expression()
         if ( expect( terminal_symbol_t::TS_PLUS ) )
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("+", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("+", Token::token_t::OPERATOR) );
         }
         // (3) ... mas pode vir um '-', ou seja, também "esperamos" um '-'.
         else if ( expect( terminal_symbol_t::TS_MINUS ) ) // ou um '-'
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("-", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("-", Token::token_t::OPERATOR) );
         } else if ( expect( terminal_symbol_t::TS_MULTIPLICATION ) ) // ou um '*'
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("-", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("*", Token::token_t::OPERATOR) );
         } else if ( expect( terminal_symbol_t::TS_DIVISION ) ) // ou um '/'
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("-", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("/", Token::token_t::OPERATOR) );
         } else if ( expect( terminal_symbol_t::TS_REST ) ) // ou um '%'
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("-", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("%", Token::token_t::OPERATOR) );
         } else if ( expect( terminal_symbol_t::TS_POTENTIATION ) ) // ou um '^'
         {
             // Ok, recebemos:
-            //token_list.push_back( Token("-", Token::token_t::OPERATOR) );
+            token_list.push_back( Token("^", Token::token_t::OPERATOR) );
         } else // ... mas se vier outra coisa, é um erro de sintaxe!
         {
             return result;
@@ -210,7 +210,19 @@ Parser::ParserResult Parser::expression()
 
 Parser::ParserResult Parser::term(){
     skip_ws();
-    return integer();
+
+    auto begin = it_curr_symb;
+    auto result =  integer();
+
+    std::string val;
+    val.insert( val.begin(), begin, it_curr_symb );
+
+    if( not val.empty() ){ // se não for vazio
+        token_list.push_back( Token( val, Token::token_t::OPERAND) ); // add token
+    }
+
+    return result;
+
 }
 
 Parser::ParserResult Parser::integer()
@@ -224,12 +236,10 @@ Parser::ParserResult Parser::integer()
     accept( terminal_symbol_t::TS_MINUS );
     return natural_number();
 
-
 }
 
 Parser::ParserResult Parser::natural_number()
 {
-
     if( digit_excl_zero() ){
         while( digit() ); /* Empty */
 
@@ -279,7 +289,7 @@ Parser::parse( std::string e_ )
     // Tentar validar a expressao...
     result = expression();
 
-    // TODO: incluir verificação de "lixo" no final da string.
+    // incluir verificação de "lixo" no final da string.
     // Gerar erro: ParserResult::EXTRANEOUS_SYMBOL
     if( result.type == ParserResult::PARSER_OK ){
         skip_ws();

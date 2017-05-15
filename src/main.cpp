@@ -15,4 +15,4 @@ int main( int argc, char * argv[] ){
 }
 
 
-// g++ src/main.cpp src/baresmanager.cpp -std=c++11 -I include -o bares
+// g++ -std=c++11 src/main.cpp src/baresmanager.cpp src/parser.cpp -I include -o bares
