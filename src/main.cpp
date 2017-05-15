@@ -1,10 +1,16 @@
 #include <iostream>
 #include "bares-manager.h"
 
-
 int main( int argc, char * argv[] ){
 
-    initialize( argv[1] );
+    // instanciar um manager
+    BaresManager manager;
+
+    // inicializar bares... Ler e guardar expressoes do arquivo de entrada
+    manager.initialize( argv[1] );
+
+    // Validar expressoes e tokenizar
+    manager.validarExpress();
 
 }
 
