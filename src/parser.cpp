@@ -34,15 +34,15 @@ std::string Parser::token_str( terminal_symbol_t s_ ) const
 {
     switch( s_ )
     {
-        case terminal_symbol_t::TS_PLUS   : return "+";
-        case terminal_symbol_t::TS_MINUS  : return "-";
-        case terminal_symbol_t::TS_MULTIPLICATION : return "*";
-        case terminal_symbol_t::TS_DIVISION : return "/";
-        case terminal_symbol_t::TS_REST : return "%";
-        case terminal_symbol_t::TS_POTENTIATION : return "^";
-        case terminal_symbol_t::TS_WS     : return " ";
-        case terminal_symbol_t::TS_ZERO   : return "0";
-        default                           : return "X";
+        case terminal_symbol_t::TS_PLUS             : return "+";
+        case terminal_symbol_t::TS_MINUS            : return "-";
+        case terminal_symbol_t::TS_MULTIPLICATION   : return "*";
+        case terminal_symbol_t::TS_DIVISION         : return "/";
+        case terminal_symbol_t::TS_REST             : return "%";
+        case terminal_symbol_t::TS_POTENTIATION     : return "^";
+        case terminal_symbol_t::TS_WS               : return " ";
+        case terminal_symbol_t::TS_ZERO             : return "0";
+        default                                     : return "X";
     }
 }
 

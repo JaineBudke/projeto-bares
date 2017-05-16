@@ -2,10 +2,15 @@
 #include <string>
 #include <fstream>
 #include <iomanip>
+#include <stack>
 
 #include "bares-manager.h"
 #include "parser.h"
 
+
+////////////////////////////////////////////////////////////////////////////
+// Funcoes auxiliares
+////////////////////////////////////////////////////////////////////////////
 
 void print_msg( const Parser::ParserResult & result, std::string str ){
     std::string error_indicator( str.size()+1, ' ');
@@ -41,6 +46,35 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
     std::cout << " " << error_indicator << std::endl;
 }
 
+bool is_operand( const Token & t )
+{
+    return t.type == Token::token_t::OPERAND;
+}
+
+bool is_operator( const Token & t )
+{
+    return t.type == Token::token_t::OPERATOR;
+}
+
+/// Determines qhether the first operator is > than the second operator.
+bool has_higher_precedence( char op1, char op2 )
+{
+/*    auto p1 = get_precedence( op1 );
+    auto p2 = get_precedence( op2 );
+
+    // special case: has the same precedence and is right association.
+    if ( p1 == p2 and is_right_association( op1 ) )
+    {
+        return false;
+    }
+
+    return p1 >= p2 ;
+*/}
+
+
+////////////////////////////////////////////////////////////////////////////
+// Funcoes principais
+////////////////////////////////////////////////////////////////////////////
 
 int  BaresManager::initialize( char * arq ){
 
@@ -100,4 +134,65 @@ void BaresManager::validarExpress(){
 
     }
 
+}
+
+
+std::string BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
+
+    // Stack para ajudar a converter a expressao.
+    std::stack< char > s;
+
+    // Percorre expressao infixa
+    for( auto tk : infix_ ){
+
+        // Operand goes straight to the output queue.
+        if ( is_operand( tk ) ) // 1 23 100, etc.
+        {
+            postfix += tk.value;
+        }
+        else if ( is_operator( tk ) ) // + - ^ % etc.
+        {
+            //char value = begin( (tk.value) );
+            // Pop out all the element with higher priority.
+            while( not s.empty() 
+
+                //and has_higher_precedence( s.top() , '+' ) 
+                ) 
+            {
+                postfix += s.top();
+                s.pop();
+            }
+            /*
+            // The incoming operator always goes into the stack.
+            s.push( tk.value ); */
+        }/*
+        else if ( is_opening_scope( ch ) ) // "("
+        {
+            s.push( ch );
+        }
+        else if ( is_closing_scope( ch ) ) // ")"
+        {
+            // pop out all elements that are not '('.
+            while( not s.empty() and not is_opening_scope( s.top() ) )
+            {
+                postfix += s.top(); // goes to the output.
+                s.pop();
+            }
+            s.pop(); // Remove the '(' that was on the stack.
+        }
+        else // anything else.
+        {
+            // ignore this char.
+        }
+    }
+
+    // Pop out all the remaining operators in the stack.
+    while( not s.empty() )
+    {
+        postfix += s.top();
+        s.pop();
+    }
+
+*/  }
+    return postfix;
 }
