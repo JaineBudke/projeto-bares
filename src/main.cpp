@@ -1,5 +1,8 @@
 #include <iostream>
 #include "bares-manager.h"
+#include "token.h"
+#include <vector>
+
 
 int main( int argc, char * argv[] ){
 
@@ -10,7 +13,10 @@ int main( int argc, char * argv[] ){
     manager.initialize( argv[1] );
 
     // Validar expressoes e tokenizar
-    manager.validarExpress();
+    std::vector< Token > tokens = manager.validarExpress();
+
+    // passar expressao do formato infixo para posfixo
+    manager.infix_to_postfix( tokens );
 
 }
 

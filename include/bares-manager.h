@@ -10,7 +10,7 @@ class BaresManager{
 
     public:
         int  initialize( char * arq );
-        void validarExpress();
+        std::vector< Token > validarExpress();
         std::string infix_to_postfix( std::vector< Token > infix_ );
 
     private:

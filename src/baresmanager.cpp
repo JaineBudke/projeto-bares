@@ -104,13 +104,14 @@ int  BaresManager::initialize( char * arq ){
 }
 
 
-void BaresManager::validarExpress(){
+std::vector< Token > BaresManager::validarExpress(){
 
     Parser my_parser; // Instancia um parser.
 
+    std::vector< Token > lista;
+
     // Tentar analisar cada expressão da lista.
     for( const auto & expr : expressions ){
-
 
         // Fazer o parsing desta expressão.
         auto result = my_parser.parse( expr );
@@ -126,13 +127,16 @@ void BaresManager::validarExpress(){
             std::cout << ">>> Expression SUCCESSFULLY parsed!\n";
 
         // Recuperar a lista de tokens.
-        auto lista = my_parser.get_tokens();
+        lista = my_parser.get_tokens();
+
         std::cout << ">>> Tokens: { ";
         std::copy( lista.begin(), lista.end(),
             std::ostream_iterator< Token >(std::cout, " ") );
         std::cout << "}\n";
 
     }
+
+    return lista;
 
 }
 
@@ -145,54 +149,20 @@ std::string BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
     // Percorre expressao infixa
     for( auto tk : infix_ ){
 
-        // Operand goes straight to the output queue.
+        // Operando vai direto para fila de saída
         if ( is_operand( tk ) ) // 1 23 100, etc.
         {
             postfix += tk.value;
         }
-        else if ( is_operator( tk ) ) // + - ^ % etc.
-        {
-            //char value = begin( (tk.value) );
-            // Pop out all the element with higher priority.
-            while( not s.empty() 
-
-                //and has_higher_precedence( s.top() , '+' ) 
-                ) 
-            {
-                postfix += s.top();
-                s.pop();
-            }
-            /*
-            // The incoming operator always goes into the stack.
-            s.push( tk.value ); */
-        }/*
-        else if ( is_opening_scope( ch ) ) // "("
-        {
-            s.push( ch );
-        }
-        else if ( is_closing_scope( ch ) ) // ")"
-        {
-            // pop out all elements that are not '('.
-            while( not s.empty() and not is_opening_scope( s.top() ) )
-            {
-                postfix += s.top(); // goes to the output.
-                s.pop();
-            }
-            s.pop(); // Remove the '(' that was on the stack.
-        }
-        else // anything else.
-        {
-            // ignore this char.
-        }
     }
 
-    // Pop out all the remaining operators in the stack.
+    // Tirar todos os operadores restantes na pilha
     while( not s.empty() )
     {
         postfix += s.top();
         s.pop();
     }
 
-*/  }
     return postfix;
+
 }

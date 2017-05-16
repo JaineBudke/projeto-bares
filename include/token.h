@@ -5,8 +5,8 @@
 #include <iostream> // std::ostream
 
 /// Represents a token.
-struct Token
-{
+struct Token{
+
     public:
         enum class token_t : int
         {
@@ -32,6 +32,7 @@ struct Token
 
             return os_;
         }
+
 };
 
 #endif
