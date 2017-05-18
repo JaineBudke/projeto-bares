@@ -136,11 +136,11 @@ int  BaresManager::initialize( char * arq ){
 }
 
 
-std::vector< Token > BaresManager::validarExpress(){
+std::vector< std::vector< Token > > BaresManager::validarExpress(){
 
     Parser my_parser; // Instancia um parser.
 
-    std::vector< Token > lista;
+    std::vector< std::vector< Token > > allTokens;
 
     // Tentar analisar cada expressão da lista.
     for( const auto & expr : expressions ){
@@ -158,7 +158,9 @@ std::vector< Token > BaresManager::validarExpress(){
         else
             std::cout << ">>> Expression SUCCESSFULLY parsed!\n";
 
-        
+        auto lista = my_parser.get_tokens();
+
+        allTokens.push_back( lista );
 
         std::cout << ">>> Tokens: { ";
         std::copy( lista.begin(), lista.end(),
@@ -167,43 +169,44 @@ std::vector< Token > BaresManager::validarExpress(){
 
     }
 
-    // Recuperar a lista de tokens.
-    lista = my_parser.get_tokens();
-
-    return lista;
+    return allTokens;
 
 }
 
 
-std::string BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
+std::vector< std::vector< Token > > BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
 
     // Stack para ajudar a converter a expressao.
     std::stack< char > s;
 
+    std::vector< Token > temp;
+
     // Percorre expressao infixa
     for( auto & tk : infix_ ){
-        std::cout << "TESTEEEEE";
         // Operando vai direto para fila de saída
         if ( is_operand( tk ) ) // 1 23 100, etc.
         {
-            postfix += tk.value;
+            temp.push_back( Token( tk.value, Token::token_t::OPERAND ) );
         }
         else if ( is_operator( tk ) ) // + - ^ % etc.
         {
 
             // conversao std::string para char
             char op = (tk.value)[0];
-            
+
             // Tirar todos os elementos com prioridade alta
             while( not s.empty() and
-                   has_higher_precedence( s.top() , op ) ) 
+                   has_higher_precedence( s.top() , op ) )
             {
-                postfix += s.top();
+                std::string top;
+                top.push_back( s.top() );
+                temp.push_back( Token( top, Token::token_t::OPERATOR ) );
                 s.pop();
             }
-            
+
             // The incoming operator always goes into the stack.
             s.push( op );
+
         }
         else // anything else.
         {
@@ -214,9 +217,14 @@ std::string BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
     // Tirar todos os operadores restantes na pilha
     while( not s.empty() )
     {
-        postfix += s.top();
+        std::string top;
+        top.push_back( s.top() );
+        temp.push_back( Token( top, Token::token_t::OPERATOR ) );
+
         s.pop();
     }
+
+    postfix.push_back( temp );
 
     return postfix;
 

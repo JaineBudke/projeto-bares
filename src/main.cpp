@@ -2,6 +2,7 @@
 #include "bares-manager.h"
 #include "token.h"
 #include <vector>
+#include <iterator>
 
 
 int main( int argc, char * argv[] ){
@@ -13,11 +14,19 @@ int main( int argc, char * argv[] ){
     manager.initialize( argv[1] );
 
     // Validar expressoes e tokenizar
-    std::vector< Token > tokens = manager.validarExpress();
+    std::vector< std::vector< Token > > tokens = manager.validarExpress();
 
     // passar expressao do formato infixo para posfixo
-	auto postfix = manager.infix_to_postfix( tokens );
-    std::cout << ">>> Output (postfix) = " << postfix << "\n";
+    for( auto tk : tokens ){
+        auto postfix = manager.infix_to_postfix( tk );
+        for( auto pos : postfix ){
+             std::cout << ">>> Tokens: { ";
+             std::copy( pos.begin(), pos.end(),
+                std::ostream_iterator< Token >( std::cout, " ") );
+            std::cout << "}\n";
+        }
+    }
+
 }
 
 
