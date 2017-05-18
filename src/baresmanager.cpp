@@ -56,10 +56,42 @@ bool is_operator( const Token & t )
     return t.type == Token::token_t::OPERATOR;
 }
 
-/// Determines qhether the first operator is > than the second operator.
-bool has_higher_precedence( char op1, char op2 )
+int get_precedence( char c )
 {
-/*    auto p1 = get_precedence( op1 );
+    int weight(0);
+    switch( c )
+    {
+        case '^': weight = 3;
+                  break;
+        // ==================================================
+        case '*':
+        case '%':
+        case '/': weight = 2;
+                  break;
+        // ==================================================
+        case '+':
+        case '-': weight = 1;
+                  break;
+        // ==================================================
+        case '(':
+                  weight = 0;
+                  break;
+        // ==================================================
+        default:
+            /* Empty */;
+    }
+
+    return weight;
+}
+
+bool is_right_association( char op )
+{
+    return op == '^';
+}
+
+/// Determines qhether the first operator is > than the second operator.
+bool has_higher_precedence( char op1, char op2 ) {
+    auto p1 = get_precedence( op1 );
     auto p2 = get_precedence( op2 );
 
     // special case: has the same precedence and is right association.
@@ -69,7 +101,7 @@ bool has_higher_precedence( char op1, char op2 )
     }
 
     return p1 >= p2 ;
-*/}
+}
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -126,8 +158,7 @@ std::vector< Token > BaresManager::validarExpress(){
         else
             std::cout << ">>> Expression SUCCESSFULLY parsed!\n";
 
-        // Recuperar a lista de tokens.
-        lista = my_parser.get_tokens();
+        
 
         std::cout << ">>> Tokens: { ";
         std::copy( lista.begin(), lista.end(),
@@ -135,6 +166,9 @@ std::vector< Token > BaresManager::validarExpress(){
         std::cout << "}\n";
 
     }
+
+    // Recuperar a lista de tokens.
+    lista = my_parser.get_tokens();
 
     return lista;
 
@@ -147,12 +181,33 @@ std::string BaresManager::infix_to_postfix( std::vector< Token > infix_ ){
     std::stack< char > s;
 
     // Percorre expressao infixa
-    for( auto tk : infix_ ){
-
+    for( auto & tk : infix_ ){
+        std::cout << "TESTEEEEE";
         // Operando vai direto para fila de saída
         if ( is_operand( tk ) ) // 1 23 100, etc.
         {
             postfix += tk.value;
+        }
+        else if ( is_operator( tk ) ) // + - ^ % etc.
+        {
+
+            // conversao std::string para char
+            char op = (tk.value)[0];
+            
+            // Tirar todos os elementos com prioridade alta
+            while( not s.empty() and
+                   has_higher_precedence( s.top() , op ) ) 
+            {
+                postfix += s.top();
+                s.pop();
+            }
+            
+            // The incoming operator always goes into the stack.
+            s.push( op );
+        }
+        else // anything else.
+        {
+            // ignore this char.
         }
     }
 

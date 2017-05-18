@@ -16,8 +16,8 @@ int main( int argc, char * argv[] ){
     std::vector< Token > tokens = manager.validarExpress();
 
     // passar expressao do formato infixo para posfixo
-    manager.infix_to_postfix( tokens );
-
+	auto postfix = manager.infix_to_postfix( tokens );
+    std::cout << ">>> Output (postfix) = " << postfix << "\n";
 }
 
 
