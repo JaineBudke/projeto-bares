@@ -269,11 +269,11 @@ long int char2integer( char ch ){
 
 std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix ) {
 
-    //std::stack< long int > s;
+    std::vector< int > results;
+    std::stack< long int > s;
 
-    /*
     // Percorre expressao posfixa
-    for( auto & tk : postfix ){
+    for( auto tk : postfix ){
 
         if ( is_operand( tk ) ) { // verifica se o token é um operando
             char op = (tk.value)[0];
@@ -286,7 +286,7 @@ std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix 
             auto op1 = s.top(); s.pop();
 
             char ch = (tk.value)[0];
-            std::cout << "\n>>> Performing " << op1 << " " << ch << " " << op2 << "\n";
+            std::cout << ">>> Performing " << op1 << " " << ch << " " << op2 << "\n";
             int result = execute_operator( op1, op2, ch );
             s.push(result);
         }
@@ -298,6 +298,10 @@ std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix 
     }
 
     std::cout << ">>> The result is: "  << s.top() << std::endl;
+    std::cout << "\n";
 
-    */
+    results.push_back( s.top() );
+
+    return results;
+
 }

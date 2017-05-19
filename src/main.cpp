@@ -1,14 +1,16 @@
 #include <iostream>
-#include "bares-manager.h"
-#include "token.h"
 #include <vector>
 #include <iterator>
+
+#include "bares-manager.h"
+#include "token.h"
 
 
 int main( int argc, char * argv[] ){
 
     std::vector< std::vector< Token > > postfix;
     std::vector< int > result;
+
     // instanciar um manager
     BaresManager manager;
 
@@ -31,13 +33,14 @@ int main( int argc, char * argv[] ){
         std::ostream_iterator< Token >( std::cout, " ") );
         std::cout << "}\n";
     }
+    std::cout << "\n";
 
 
     // encontrar resultado da expressao
-    /*
+
     for( auto pf : postfix ){
         result = manager.evaluate_postfix( pf );
-    }*/
+    }
 
 
     return 0;

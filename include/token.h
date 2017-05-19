@@ -11,7 +11,7 @@ struct Token{
         enum class token_t : int
         {
             OPERAND = 0, // Basically numbers.
-            OPERATOR     // "+", "-".
+            OPERATOR      // "+", "-".
         };
 
         std::string value; //<! The original token value.
