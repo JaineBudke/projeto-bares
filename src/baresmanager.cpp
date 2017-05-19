@@ -106,6 +106,55 @@ bool has_higher_precedence( char op1, char op2 ) {
 }
 
 
+long int execute_operator( long int  n1, long int  n2, char opr )
+{
+    long int  result(0);
+    switch ( opr )
+    {
+        case '^' : result = static_cast<long int >( pow( n1, n2 ) );
+                   break;
+        case '*' : result =  n1 * n2;
+                   break;
+        case '/' : if ( n2 == 0 )
+                       throw std::runtime_error( "Division by zero" );
+                   result = n1/n2;
+                   break;
+        case '%' : if ( n2 == 0 )
+                       throw std::runtime_error( "Division by zero" );
+                   result = n1%n2;
+                   break;
+        case '+' : result = n1 + n2;
+                   break;
+        case '-' : result =  n1 - n2;
+                   break;
+        default: assert(false);
+    }
+
+    return result;
+
+}
+
+
+long int char2integer( std::string ch ){
+
+    int tam = ch.size();
+    int val = 0;
+
+    long int num;
+    for( auto i( std::begin(ch) ) ; i != std::end(ch) ; i++ ){
+        num = *i - '0';
+        int dec = pow( 10, (tam-1) );
+
+        val += num*dec;
+        tam --;
+    }
+
+    //return ch - '0';
+    return val;
+
+}
+
+
 ////////////////////////////////////////////////////////////////////////////
 // Funcoes principais
 ////////////////////////////////////////////////////////////////////////////
@@ -234,38 +283,6 @@ std::vector< std::vector< Token > > BaresManager::infix_to_postfix( std::vector<
 
 }
 
-long int execute_operator( long int  n1, long int  n2, char opr )
-{
-    long int  result(0);
-    switch ( opr )
-    {
-        case '^' : result = static_cast<long int >( pow( n1, n2 ) );
-                   break;
-        case '*' : result =  n1 * n2;
-                   break;
-        case '/' : if ( n2 == 0 )
-                       throw std::runtime_error( "Division by zero" );
-                   result = n1/n2;
-                   break;
-        case '%' : if ( n2 == 0 )
-                       throw std::runtime_error( "Division by zero" );
-                   result = n1%n2;
-                   break;
-        case '+' : result = n1 + n2;
-                   break;
-        case '-' : result =  n1 - n2;
-                   break;
-        default: assert(false);
-    }
-
-    return result;
-
-}
-
-
-long int char2integer( char ch ){
-    return ch - '0';
-}
 
 std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix ) {
 
@@ -276,8 +293,7 @@ std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix 
     for( auto tk : postfix ){
 
         if ( is_operand( tk ) ) { // verifica se o token é um operando
-            char op = (tk.value)[0];
-            s.push( char2integer( op ) );
+            s.push( char2integer( tk.value ) );
         }
 
         else if ( is_operator( tk ) ) {

@@ -34,7 +34,7 @@ Comando para executar o programa
 - [X] Valida expressão e cria lista de tokens.
 - [X] Detecta corremente um conjunto de erros especificados.
 - [X] Converte do formato infixo para posfixo.
-- [ ] Realiza a operação corretamente.
+- [X] Realiza a operação corretamente.
 - [ ] Inclui e trata corretamente o uso de parênteses.
 - [ ] Salvar dados em arquivo externo.
 

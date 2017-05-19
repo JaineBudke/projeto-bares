@@ -37,7 +37,6 @@ int main( int argc, char * argv[] ){
 
 
     // encontrar resultado da expressao
-
     for( auto pf : postfix ){
         result = manager.evaluate_postfix( pf );
     }
