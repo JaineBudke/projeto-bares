@@ -33,7 +33,7 @@ Comando para executar o programa
 - [X] Receber dados via leitura de arquivo.
 - [X] Valida expressão e cria lista de tokens.
 - [X] Detecta corremente um conjunto de erros especificados.
-- [ ] Converte do formato infixo para posfixo.
+- [X] Converte do formato infixo para posfixo.
 - [ ] Realiza a operação corretamente.
 - [ ] Inclui e trata corretamente o uso de parênteses.
 - [ ] Salvar dados em arquivo externo.

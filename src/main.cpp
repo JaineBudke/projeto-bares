@@ -7,6 +7,8 @@
 
 int main( int argc, char * argv[] ){
 
+    std::vector< std::vector< Token > > postfix;
+    std::vector< int > result;
     // instanciar um manager
     BaresManager manager;
 
@@ -18,16 +20,25 @@ int main( int argc, char * argv[] ){
 
     // passar expressao do formato infixo para posfixo
     for( auto tk : tokens ){
-        auto postfix = manager.infix_to_postfix( tk );
-        for( auto pos : postfix ){
-             std::cout << ">>> Tokens: { ";
-             std::copy( pos.begin(), pos.end(),
-                std::ostream_iterator< Token >( std::cout, " ") );
-            std::cout << "}\n";
-        }
+        postfix = manager.infix_to_postfix( tk );
     }
 
+    // Imprimir para usários os tokens válidos e já no formato posfixo
+    std::cout << "\nTokens válidos e no formato postfix:\n";
+    for( auto pos : postfix ){
+        std::cout << ">>> Tokens: { ";
+        std::copy( pos.begin(), pos.end(),
+        std::ostream_iterator< Token >( std::cout, " ") );
+        std::cout << "}\n";
+    }
+
+
+    // encontrar resultado da expressao
+    /*
+    for( auto pf : postfix ){
+        result = manager.evaluate_postfix( pf );
+    }*/
+
+
+    return 0;
 }
-
-
-// g++ -std=c++11 src/main.cpp src/baresmanager.cpp src/parser.cpp -I include -o bares

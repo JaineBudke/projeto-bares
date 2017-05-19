@@ -12,6 +12,7 @@ class BaresManager{
         int  initialize( char * arq );
         std::vector< std::vector< Token > > validarExpress();
         std::vector< std::vector< Token > > infix_to_postfix( std::vector< Token > infix_ );
+        std::vector< int > evaluate_postfix( std::vector< Token > postfix );
 
     private:
         std::vector<std::string> expressions;               //<! expressoes a serem analisadas

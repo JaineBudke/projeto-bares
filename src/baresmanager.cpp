@@ -3,6 +3,8 @@
 #include <fstream>
 #include <iomanip>
 #include <stack>
+#include <cassert>   // assert
+#include <cmath>     // pow
 
 #include "bares-manager.h"
 #include "parser.h"
@@ -46,8 +48,7 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
     std::cout << " " << error_indicator << std::endl;
 }
 
-bool is_operand( const Token & t )
-{
+bool is_operand( const Token & t ){
     return t.type == Token::token_t::OPERAND;
 }
 
@@ -83,6 +84,7 @@ int get_precedence( char c )
 
     return weight;
 }
+
 
 bool is_right_association( char op )
 {
@@ -160,7 +162,9 @@ std::vector< std::vector< Token > > BaresManager::validarExpress(){
 
         auto lista = my_parser.get_tokens();
 
-        allTokens.push_back( lista );
+        if ( result.type == Parser::ParserResult::PARSER_OK ) {
+            allTokens.push_back( lista );
+        }
 
         std::cout << ">>> Tokens: { ";
         std::copy( lista.begin(), lista.end(),
@@ -228,4 +232,72 @@ std::vector< std::vector< Token > > BaresManager::infix_to_postfix( std::vector<
 
     return postfix;
 
+}
+
+long int execute_operator( long int  n1, long int  n2, char opr )
+{
+    long int  result(0);
+    switch ( opr )
+    {
+        case '^' : result = static_cast<long int >( pow( n1, n2 ) );
+                   break;
+        case '*' : result =  n1 * n2;
+                   break;
+        case '/' : if ( n2 == 0 )
+                       throw std::runtime_error( "Division by zero" );
+                   result = n1/n2;
+                   break;
+        case '%' : if ( n2 == 0 )
+                       throw std::runtime_error( "Division by zero" );
+                   result = n1%n2;
+                   break;
+        case '+' : result = n1 + n2;
+                   break;
+        case '-' : result =  n1 - n2;
+                   break;
+        default: assert(false);
+    }
+
+    return result;
+
+}
+
+
+long int char2integer( char ch ){
+    return ch - '0';
+}
+
+std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix ) {
+
+    //std::stack< long int > s;
+
+    /*
+    // Percorre expressao posfixa
+    for( auto & tk : postfix ){
+
+        if ( is_operand( tk ) ) { // verifica se o token é um operando
+            char op = (tk.value)[0];
+            s.push( char2integer( op ) );
+        }
+
+        else if ( is_operator( tk ) ) {
+            // Recupera os dois operandos na ordem inversa
+            auto op2 = s.top(); s.pop();
+            auto op1 = s.top(); s.pop();
+
+            char ch = (tk.value)[0];
+            std::cout << "\n>>> Performing " << op1 << " " << ch << " " << op2 << "\n";
+            int result = execute_operator( op1, op2, ch );
+            s.push(result);
+        }
+
+        else {
+            assert(false);
+        }
+
+    }
+
+    std::cout << ">>> The result is: "  << s.top() << std::endl;
+
+    */
 }
