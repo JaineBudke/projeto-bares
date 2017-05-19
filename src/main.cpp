@@ -9,7 +9,8 @@
 int main( int argc, char * argv[] ){
 
     std::vector< std::vector< Token > > postfix;
-    std::vector< int > result;
+    int result;
+    std::vector< int > resultados;
 
     // instanciar um manager
     BaresManager manager;
@@ -39,8 +40,10 @@ int main( int argc, char * argv[] ){
     // encontrar resultado da expressao
     for( auto pf : postfix ){
         result = manager.evaluate_postfix( pf );
+        resultados.push_back( result );
     }
 
+    manager.apresentarResult( resultados );
 
     return 0;
 }

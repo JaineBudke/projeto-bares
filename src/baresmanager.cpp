@@ -48,6 +48,7 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
     std::cout << " " << error_indicator << std::endl;
 }
 
+
 bool is_operand( const Token & t ){
     return t.type == Token::token_t::OPERAND;
 }
@@ -149,7 +150,6 @@ long int char2integer( std::string ch ){
         tam --;
     }
 
-    //return ch - '0';
     return val;
 
 }
@@ -284,9 +284,8 @@ std::vector< std::vector< Token > > BaresManager::infix_to_postfix( std::vector<
 }
 
 
-std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix ) {
+int BaresManager::evaluate_postfix( std::vector< Token > postfix ) {
 
-    std::vector< int > results;
     std::stack< long int > s;
 
     // Percorre expressao posfixa
@@ -313,11 +312,42 @@ std::vector< int > BaresManager::evaluate_postfix( std::vector< Token > postfix 
 
     }
 
-    std::cout << ">>> The result is: "  << s.top() << std::endl;
+    int result = s.top();
+
+    std::cout << ">>> The result is: "  << result << std::endl;
     std::cout << "\n";
 
-    results.push_back( s.top() );
+    return result;
 
-    return results;
+}
+
+
+void BaresManager::apresentarResult( std::vector< int > res ){
+
+    Parser my_parser; // Instancia um parser.
+
+    std::vector< std::vector< Token > > allTokens;
+
+    int cont = 0;
+
+    // Tentar analisar cada expressão da lista.
+    for( const auto & expr : expressions ){
+
+        // Fazer o parsing desta expressão.
+        auto result = my_parser.parse( expr );
+
+        // Se deu pau, imprimir a mensagem adequada.
+        if ( result.type != Parser::ParserResult::PARSER_OK ){
+            print_msg( result, expr );
+        }
+        else{
+            std::cout << res[cont];
+            cont++;
+        }
+
+
+        std::cout << "\n";
+    }
+
 
 }
