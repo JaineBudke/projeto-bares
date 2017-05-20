@@ -5,7 +5,8 @@
 #include <stack>
 #include <cassert>   // assert
 #include <cmath>     // pow
-
+#include <stdexcept> // runtime_error
+	
 #include "bares-manager.h"
 #include "parser.h"
 
@@ -47,6 +48,37 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
     std::cout << "\"" << str << "\"\n";
     std::cout << " " << error_indicator << std::endl;
 }
+
+
+void message( const Parser::ParserResult & result, std::string str ){
+    
+    switch ( result.type )
+    {
+        case Parser::ParserResult::UNEXPECTED_END_OF_EXPRESSION:
+            std::cout << "Unexpected end of input at column (" << result.at_col << ")!";
+            break;
+        case Parser::ParserResult::ILL_FORMED_INTEGER:
+            std::cout << "Ill formed integer at column (" << result.at_col << ")!";
+            break;
+        case Parser::ParserResult::MISSING_TERM:
+            std::cout << "Missing <term> at column (" << result.at_col << ")!";
+            break;
+        case Parser::ParserResult::EXTRANEOUS_SYMBOL:
+            std::cout << "Extraneous symbol after valid expression found at column (" << result.at_col << ")!";
+            break;
+        case Parser::ParserResult::MISSING_CLOSING_PARENTHESIS:
+            std::cout << "Missing closing \")\" at column (" << result.at_col << ")!";
+            break;
+        case Parser::ParserResult::INTEGER_OUT_OF_RANGE:
+            std::cout << "Integer constant out of range beginning at column (" << result.at_col << ")!";
+            break;
+        default:
+            std::cout << "Unhandled error found!";
+            break;
+    }
+
+}
+
 
 
 bool is_operand( const Token & t ){
@@ -338,16 +370,15 @@ void BaresManager::apresentarResult( std::vector< int > res ){
 
         // Se deu pau, imprimir a mensagem adequada.
         if ( result.type != Parser::ParserResult::PARSER_OK ){
-            print_msg( result, expr );
+            message( result, expr );
         }
         else{
             std::cout << res[cont];
             cont++;
         }
 
-
         std::cout << "\n";
-    }
 
+    }
 
 }
