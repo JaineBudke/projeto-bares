@@ -1,3 +1,11 @@
+/**
+ * @file    main.cpp
+ * @brief   Código fonte do programa
+ * @author  Jaine Budke (jainebudke@hotmail.com)
+ * @since   02/05/2017
+ * @date    23/05/2017
+ */
+
 #include <iostream>
 #include <vector>
 #include <iterator>
@@ -5,7 +13,9 @@
 #include "bares-manager.h"
 #include "token.h"
 
-
+/**
+*@brief Função principal que contém toda a execução do programa.
+*/
 int main( int argc, char * argv[] ){
 
     std::vector< std::vector< Token > > postfix;

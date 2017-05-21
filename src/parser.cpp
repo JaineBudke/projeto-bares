@@ -1,6 +1,20 @@
+/**
+ * @file    parser.cpp
+ * @brief   Código fonte com a implementacao de funcoes que
+            realizam o parsing e tokenização da expressão.
+ * @author  Jaine Budke (jainebudke@hotmail.com)
+ * @since   02/05/2017
+ * @date    23/05/2017
+ */
+
+
 #include "../include/parser.h"
 
-/// Converts a valid character to the corresponding terminal symbol.
+
+
+/** @brief Converte de caractere para código do símbolo terminal.
+            @param ch Caractere.
+            @return Código do simbolo terminal. */
 Parser::terminal_symbol_t  Parser::lexer( char c_ ) const
 {
     switch( c_ )
@@ -29,7 +43,9 @@ Parser::terminal_symbol_t  Parser::lexer( char c_ ) const
 }
 
 
-/// Convert a terminal symbol into its corresponding string representation.
+/** @brief Converte um simbolo terminal para a string correspondente.
+    @param ch Caractere.
+    @return Código do simbolo terminal. */
 std::string Parser::token_str( terminal_symbol_t s_ ) const
 {
     switch( s_ )
@@ -46,14 +62,16 @@ std::string Parser::token_str( terminal_symbol_t s_ ) const
     }
 }
 
-/// Consumes a valid character from the expression being parsed.
+/** @brief Iterador para avançar para próximo char na expressão. */
 void Parser::next_symbol( void )
 {
     // Get a valid symbol for processing
     std::advance( it_curr_symb, 1 );
 }
 
-/// Verifies whether the current symbol is equal to the terminal symbol requested.
+/** @brief Verifica se o símbolo atual é igual ao símbolo do terminal solicitado.
+    @param s_ Simbolo do terminal.
+    @return 1 se for igual 0 otherwise. */
 bool Parser::peek( terminal_symbol_t c_ ) const
 {
     // Verificar se o código fornecido no argumento corresponde
@@ -62,7 +80,9 @@ bool Parser::peek( terminal_symbol_t c_ ) const
              lexer( *it_curr_symb ) == c_ );
 }
 
-/// Tries to match the current character to a symbol passed as argument.
+/** @brief Tenta aceitar o símbolo solicitado.
+    @param s_ Simbolo do terminal.
+    @return 1 se aceitar 0 otherwise. */
 bool Parser::accept( terminal_symbol_t c_ )
 {
     // Se o caractere atual for o requisitado, o método consome o
@@ -76,7 +96,9 @@ bool Parser::accept( terminal_symbol_t c_ )
     return false;
 }
 
-/// Verify whether the next valid symbol is the one expected; if it is so, the method accepts it.
+/** @brief Ignora qualquer WS/Tab e tenta aceitar o símbolo solicitado.
+    @param s_ Simbolo do terminal.
+    @return 1 se aceitar 0 otherwise. */
 bool Parser::expect( terminal_symbol_t c_ )
 {
     // Salte todos os caracteres em branco e tente validar
@@ -86,7 +108,7 @@ bool Parser::expect( terminal_symbol_t c_ )
 }
 
 
-/// Ignores any white space or tabs in the expression until reach a valid symbol or end of input.
+/** @brief Ignora qualquer WS/Tab e para no próximo caractere. */
 void Parser::skip_ws( void )
 {
     // Simplemente salta todos os caracteres em branco.
@@ -100,7 +122,8 @@ void Parser::skip_ws( void )
     }
 }
 
-/// Checks whether we reached the end of the expression string.
+/** @brief Verifica se chegamos ao final da sequência de expressão.
+    @return 1 se chegou 0 otherwise. */
 bool Parser::end_input( void ) const
 {
     // "Fim de entrada" ocorre quando o iterador chega ao
@@ -108,7 +131,9 @@ bool Parser::end_input( void ) const
     return it_curr_symb == expr.end();
 }
 
-/// Converts from string to integer.
+/** @brief Converte um string em um integer.
+    @param ch Caractere .
+    @return Caractere no tipo inteiro. */ 
 Parser::input_int_type str_to_int( std::string input_str_ )
 {
     // Creating input stream.
@@ -136,6 +161,9 @@ Parser::input_int_type str_to_int( std::string input_str_ )
  * termo isolado ou seguido de um ou mais termos com um + ou - entre eles.
  *
  */
+
+/** @brief Processa uma expressão.
+    @return Resultado do processamento. */ 
 Parser::ParserResult Parser::expression()
 {
     skip_ws(); // Salta todos os espaços em branco.
@@ -208,6 +236,8 @@ Parser::ParserResult Parser::expression()
     return result;
 }
 
+/** @brief Processa um termo.
+    @return Resultado do processamento. */ 
 Parser::ParserResult Parser::term(){
     skip_ws();
 
@@ -225,6 +255,8 @@ Parser::ParserResult Parser::term(){
 
 }
 
+/** @brief Processa um inteiro.
+    @return Resultado do processamento. */ 
 Parser::ParserResult Parser::integer()
 {
     // Será que é um zero?
@@ -238,6 +270,8 @@ Parser::ParserResult Parser::integer()
 
 }
 
+/** @brief Processa um número natural.
+    @return Resultado do processamento. */ 
 Parser::ParserResult Parser::natural_number()
 {
     if( digit_excl_zero() ){
@@ -249,25 +283,25 @@ Parser::ParserResult Parser::natural_number()
     return ParserResult( ParserResult::ILL_FORMED_INTEGER, std::distance( expr.begin(), it_curr_symb ) );
 }
 
+/** @brief Verifica se número é 1...9.
+    @return 1 se for 0 otherwise. */
 bool Parser::digit_excl_zero()
 {
     return accept( terminal_symbol_t::TS_NON_ZERO_DIGIT );
 }
 
+/** @brief Verifica se número é 0...9.
+    @return 1 se for 0 otherwise. */
 bool Parser::digit()
 {
     return (accept( terminal_symbol_t::TS_ZERO ) or
             accept( terminal_symbol_t::TS_NON_ZERO_DIGIT ));
 }
 
-/*!
- * This is the parser's entry point.
- * This method tries to (recursivelly) validate the expression.
- * During this process, we also stored the tokens into a container.
- *
- * \param e_ The string with the expression to parse.
- * \return The parsing result.
- */
+
+/** @brief Realiza o parsing
+    @param e_ Expressão.
+    @return Resultado. */
 Parser::ParserResult
 Parser::parse( std::string e_ )
 {
@@ -302,10 +336,9 @@ Parser::parse( std::string e_ )
 }
 
 
-/// Return the list of tokens, which is the by-product created during the syntax analysis.
-std::vector< Token >
-Parser::get_tokens( void ) const
-{
+/** @brief Recupera tokens.
+    @return Lista de tokens. */
+std::vector< Token > Parser::get_tokens( void ) const {
     return token_list;
 }
 

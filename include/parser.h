@@ -68,9 +68,14 @@ class Parser {
         typedef long long int input_int_type;
 
         //==== Public interface
-        /// Recebe uma expressão, realiza o parsing e retorna o resultado.
+
+        /** @brief Realiza o parsing
+            @param e_ Expressão.
+            @return Resultado. */
         ParserResult parse( std::string e_ );
-        /// Retorna a lista de tokens.
+
+        /** @brief Recupera tokens.
+            @return Lista de tokens. */
         std::vector< Token > get_tokens( void ) const;
 
         //==== Special methods
@@ -107,27 +112,76 @@ class Parser {
         std::string::iterator it_curr_symb;  //<! Ponteiro para o atual char dentro da expressão.
         std::vector< Token > token_list;     //<! Resultado da lista de tokens extraído da expressão.
 
-        /// Converte de caractere para código do símbolo terminal.
-        terminal_symbol_t lexer( char ) const;
+        /** @brief Converte de caractere para código do símbolo terminal.
+            @param ch Caractere.
+            @return Código do simbolo terminal. */
+        terminal_symbol_t lexer( char ch ) const;
+
+        /** @brief Converte um simbolo terminal para a string correspondente.
+		    @param ch Caractere.
+		    @return Código do simbolo terminal. */
         std::string token_str( terminal_symbol_t s_ ) const;
 
         //=== Support methods.
-        void next_symbol( void );                // Iterador para avançar para próximo char na expressão.
-        bool peek( terminal_symbol_t s_ ) const; // Pegar o caractere atual.
-        bool accept( terminal_symbol_t s_ );     // Tenta aceitar o símbolo solicitado.
-        bool expect( terminal_symbol_t );        // Ignora qualquer WS/Tab e tenta aceitar o símbolo solicitado.
-        void skip_ws( void );                    // Ignora qualquer WS/Tab e para no próximo caractere.
-        bool end_input( void ) const;            // Verifica se chegamos ao final da sequência de expressão.
-        input_int_type str_to_int( std::string );// Converte um string em um integer.
+        
+        /** @brief Iterador para avançar para próximo char na expressão. */
+        void next_symbol( void );                
+
+        /** @brief Verifica se o símbolo atual é igual ao símbolo do terminal solicitado.
+            @param s_ Simbolo do terminal.
+            @return 1 se for igual 0 otherwise. */
+        bool peek( terminal_symbol_t s_ ) const;
+
+        /** @brief Tenta aceitar o símbolo solicitado.
+            @param s_ Simbolo do terminal.
+            @return 1 se aceitar 0 otherwise. */
+        bool accept( terminal_symbol_t s_ );
+
+        /** @brief Ignora qualquer WS/Tab e tenta aceitar o símbolo solicitado.
+            @param s_ Simbolo do terminal.
+            @return 1 se aceitar 0 otherwise. */
+        bool expect( terminal_symbol_t );
+
+        /** @brief Ignora qualquer WS/Tab e para no próximo caractere. */
+        void skip_ws( void );                    
+
+        /** @brief Verifica se chegamos ao final da sequência de expressão.
+            @return 1 se chegou 0 otherwise. */
+        bool end_input( void ) const;     
+
+        /** @brief Converte um string em um integer.
+            @param ch Caractere .
+            @return Caractere no tipo inteiro. */ 
+        input_int_type str_to_int( std::string ch );
+
 
         //=== NTS methods.
+
+        /** @brief Processa uma expressão.
+            @return Resultado do processamento. */ 
         ParserResult expression();
+
+        /** @brief Processa um termo.
+            @return Resultado do processamento. */ 
         ParserResult term();
+
+        /** @brief Processa um inteiro.
+            @return Resultado do processamento. */ 
         ParserResult integer();
+
+        /** @brief Processa um número natural.
+            @return Resultado do processamento. */ 
         ParserResult natural_number();
 
+
         //=== Terminal methods - must return bool
+
+        /** @brief Verifica se número é 1...9.
+            @return 1 se for 0 otherwise. */
         bool digit_excl_zero();
+
+        /** @brief Verifica se número é 0...9.
+            @return 1 se for 0 otherwise. */
         bool digit();
 };
 
