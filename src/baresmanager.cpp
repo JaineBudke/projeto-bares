@@ -6,6 +6,7 @@
 #include <cassert>   // assert
 #include <cmath>     // pow
 #include <stdexcept> // runtime_error
+
 	
 #include "bares-manager.h"
 #include "parser.h"
@@ -50,30 +51,33 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
 }
 
 
-void message( const Parser::ParserResult & result, std::string str ){
+void BaresManager::message( int cont, std::ofstream & arqsaida, const Parser::ParserResult & result, std::string str ){
+    
+    int tam = expressions[cont].size();
+    std::cout << tam << "\n";
     
     switch ( result.type )
     {
         case Parser::ParserResult::UNEXPECTED_END_OF_EXPRESSION:
-            std::cout << "Unexpected end of input at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20) << std::setfill(' ') << std::right << "Unexpected end of input at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::ILL_FORMED_INTEGER:
-            std::cout << "Ill formed integer at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Ill formed integer at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::MISSING_TERM:
-            std::cout << "Missing <term> at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Missing <term> at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::EXTRANEOUS_SYMBOL:
-            std::cout << "Extraneous symbol after valid expression found at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << std::right << "Extraneous symbol after valid expression found at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::MISSING_CLOSING_PARENTHESIS:
-            std::cout << "Missing closing \")\" at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Missing closing \")\" at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::INTEGER_OUT_OF_RANGE:
-            std::cout << "Integer constant out of range beginning at column (" << result.at_col << ")!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Integer constant out of range beginning at column (" << result.at_col << ")!";
             break;
         default:
-            std::cout << "Unhandled error found!";
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Unhandled error found!";
             break;
     }
 
@@ -207,12 +211,6 @@ int  BaresManager::initialize( char * arq ){
         getline(arquivo, operacao);
         expressions.push_back( operacao );
     } while( arquivo.good() );
-
-    /* TESTE DE LEITURA CORRETA DO ARQUIVO
-    for (auto i = std::begin(expressions); i != std::end(expressions); ++i){
-        std::cout << *i << "\n";
-    }*/
-
 
     // fechando arquivo
     arquivo.close();
@@ -360,8 +358,17 @@ void BaresManager::apresentarResult( std::vector< int > res ){
 
     std::vector< std::vector< Token > > allTokens;
 
-    int cont = 0;
+    // Configurando saída dos dados em arquivo
+    std::ofstream arqsaida;
+    // Cria e abre arquivo
+    arqsaida.open( "resultados.txt" , std::ios::out );
+    // Se houver erro, sai do programa
+	if ( !arqsaida.is_open() )
+		return;
 
+
+    int cont = 0;
+    
     // Tentar analisar cada expressão da lista.
     for( const auto & expr : expressions ){
 
@@ -370,15 +377,18 @@ void BaresManager::apresentarResult( std::vector< int > res ){
 
         // Se deu pau, imprimir a mensagem adequada.
         if ( result.type != Parser::ParserResult::PARSER_OK ){
-            message( result, expr );
+            message( cont, arqsaida, result, expr );v
         }
         else{
-            std::cout << res[cont];
-            cont++;
+        	int tam = expressions[cont].size();
+            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << std::right << res[cont];
         }
 
-        std::cout << "\n";
+        cont++;
+        arqsaida << "\n";
 
     }
+
+    arqsaida.close();
 
 }

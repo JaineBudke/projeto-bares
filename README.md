@@ -36,7 +36,7 @@ Comando para executar o programa
 - [X] Converte do formato infixo para posfixo.
 - [X] Realiza a operação corretamente.
 - [ ] Inclui e trata corretamente o uso de parênteses.
-- [ ] Salvar dados em arquivo externo.
+- [X] Salvar dados em arquivo externo.
 
 
 Programa desenvolvido por _Jaine Budke_ (< *jainebudke@hotmail.com* >), 2017.1
