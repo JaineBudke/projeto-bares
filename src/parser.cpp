@@ -215,8 +215,8 @@ Parser::ParserResult Parser::expression()
             return result;
         }
 
-        // (4) Se chegamos aqui é porque recebemos com sucesso um "+"
-        // ou um "-". Então agora TEM QUE VIR UM TERMO!.
+        // (4) Se chegamos aqui é porque recebemos com sucesso um
+        // operador. Então agora TEM QUE VIR UM TERMO!.
         // Se não vier um termo, então temos um erro de sintaxe.
 
         result = term(); // consumir um termo da entrada (expressão).
@@ -265,7 +265,8 @@ Parser::ParserResult Parser::integer()
     }
 
     // Tratar o '-' unário
-    accept( terminal_symbol_t::TS_MINUS );
+    while( accept( terminal_symbol_t::TS_MINUS ) ){ }
+
     return natural_number();
 
 }

@@ -217,15 +217,32 @@ long int char2integer( std::string ch ){
     int val = 0;
 
     long int num;
-    for( auto i( std::begin(ch) ) ; i != std::end(ch) ; i++ ){
-        num = *i - '0';
-        int dec = pow( 10, (tam-1) );
 
-        val += num*dec;
-        tam --;
+    if( ch[0] == '-' ){
+    	int menos = 1;
+    	int cnt = 1;
+    	while( ch[cnt] == '-' ){
+    		menos += 1;
+    		cnt += 1;
+    	}
+    	for( auto i( std::begin(ch)+menos ) ; i != std::end(ch) ; i++ ){
+	        num = *i - '0';
+	        int dec = pow( 10, (tam-1-menos) );
+
+	        val += num*dec;
+	        tam --;
+	    }
+	    return val*pow((-1), menos);
+    } else {
+    	for( auto i( std::begin(ch) ) ; i != std::end(ch) ; i++ ){
+	        num = *i - '0';
+	        int dec = pow( 10, (tam-1) );
+
+	        val += num*dec;
+	        tam --;
+	    }
+	    return val;
     }
-
-    return val;
 
 }
 
