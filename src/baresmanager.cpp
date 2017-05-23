@@ -59,32 +59,32 @@ void print_msg( const Parser::ParserResult & result, std::string str ){
     @param arqsaida Arquivo de saída dos resultados
     @param result O resultado do Parser */
 void BaresManager::message( int cont, std::ofstream & arqsaida, const Parser::ParserResult & result ){
-    
+
     int tam = expressions[cont].size();
     std::cout << tam << "\n";
-    
+
     switch ( result.type )
     {
         case Parser::ParserResult::UNEXPECTED_END_OF_EXPRESSION:
-            arqsaida << expressions[cont] << std::setw(20) << std::setfill(' ') << std::right << "Unexpected end of input at column (" << result.at_col << ")!";
+            arqsaida << "Unexpected end of input at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::ILL_FORMED_INTEGER:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Ill formed integer at column (" << result.at_col << ")!";
+            arqsaida << "Ill formed integer at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::MISSING_TERM:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Missing <term> at column (" << result.at_col << ")!";
+            arqsaida << "Missing <term> at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::EXTRANEOUS_SYMBOL:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << std::right << "Extraneous symbol after valid expression found at column (" << result.at_col << ")!";
+            arqsaida << "Extraneous symbol after valid expression found at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::MISSING_CLOSING_PARENTHESIS:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Missing closing \")\" at column (" << result.at_col << ")!";
+            arqsaida << "Missing closing \")\" at column (" << result.at_col << ")!";
             break;
         case Parser::ParserResult::INTEGER_OUT_OF_RANGE:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Integer constant out of range beginning at column (" << result.at_col << ")!";
+            arqsaida << "Integer constant out of range beginning at column (" << result.at_col << ")!";
             break;
         default:
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << "Unhandled error found!";
+            arqsaida << "Unhandled error found!";
             break;
     }
 
@@ -416,7 +416,7 @@ void BaresManager::apresentarResult( std::vector< int > res ){
 
 
     int cont = 0;
-    
+
     // Tentar analisar cada expressão da lista.
     for( const auto & expr : expressions ){
 
@@ -429,10 +429,10 @@ void BaresManager::apresentarResult( std::vector< int > res ){
         }
         else{
         	int tam = expressions[cont].size();
-            arqsaida << expressions[cont] << std::setw(20-tam) << std::setfill(' ') << std::right << res[cont];
+            arqsaida << res[cont];
+            cont++;
         }
 
-        cont++;
         arqsaida << "\n";
 
     }
